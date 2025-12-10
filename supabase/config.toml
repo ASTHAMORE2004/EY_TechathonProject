@@ -1,0 +1,4 @@
+project_id = "mmgiawdabanndymppldo"
+
+[functions.loan-chat]
+verify_jwt = false
