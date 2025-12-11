@@ -1,4 +1,6 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/hooks/useAuth';
 import { 
   Banknote, 
   ShieldCheck, 
@@ -7,7 +9,9 @@ import {
   ArrowRight,
   Bot,
   Clock,
-  FileCheck
+  FileCheck,
+  User,
+  LogIn
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -17,6 +21,8 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ onStartChat, onFeatureClick }: HeroSectionProps) {
+  const { user, isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
       {/* Background Effects */}
@@ -33,6 +39,37 @@ export function HeroSection({ onStartChat, onFeatureClick }: HeroSectionProps) {
           backgroundSize: '50px 50px'
         }}
       />
+
+      {/* Auth Navigation */}
+      <div className="absolute top-4 right-4 z-20 flex items-center gap-3">
+        {isAuthenticated ? (
+          <button
+            onClick={() => navigate('/dashboard')}
+            className={cn(
+              'flex items-center gap-2 px-4 py-2 rounded-xl',
+              'bg-primary/10 border border-primary/20',
+              'text-primary font-medium text-sm',
+              'hover:bg-primary/20 transition-colors'
+            )}
+          >
+            <User size={16} />
+            Dashboard
+          </button>
+        ) : (
+          <button
+            onClick={() => navigate('/auth')}
+            className={cn(
+              'flex items-center gap-2 px-4 py-2 rounded-xl',
+              'bg-primary/10 border border-primary/20',
+              'text-primary font-medium text-sm',
+              'hover:bg-primary/20 transition-colors'
+            )}
+          >
+            <LogIn size={16} />
+            Sign In
+          </button>
+        )}
+      </div>
 
       <div className="relative z-10 max-w-5xl mx-auto text-center">
         {/* Badge */}
