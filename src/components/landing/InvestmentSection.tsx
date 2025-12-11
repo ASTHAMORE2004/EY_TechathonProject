@@ -66,7 +66,11 @@ const colorVariants = {
   },
 };
 
-export function InvestmentSection() {
+interface InvestmentSectionProps {
+  onLearnMore?: () => void;
+}
+
+export function InvestmentSection({ onLearnMore }: InvestmentSectionProps) {
   return (
     <section className="py-24 px-4 bg-card relative overflow-hidden">
       {/* Background Glow */}
@@ -122,10 +126,13 @@ export function InvestmentSection() {
 
         {/* CTA */}
         <div className="mt-16 text-center">
-          <div className="inline-flex items-center gap-2 text-accent hover:underline cursor-pointer">
+          <button 
+            onClick={onLearnMore}
+            className="inline-flex items-center gap-2 text-accent hover:underline cursor-pointer"
+          >
             <span className="font-medium">Learn more about our investment options</span>
             <ArrowUpRight size={18} />
-          </div>
+          </button>
         </div>
       </div>
     </section>

@@ -62,7 +62,11 @@ const colorClasses = {
   accent: 'bg-accent/10 border-accent/30 text-accent',
 };
 
-export function AgentsSection() {
+interface AgentsSectionProps {
+  onAgentClick?: (agentName: string) => void;
+}
+
+export function AgentsSection({ onAgentClick }: AgentsSectionProps) {
   return (
     <section className="py-24 px-4 bg-gradient-dark relative overflow-hidden">
       {/* Background Pattern */}
@@ -95,12 +99,13 @@ export function AgentsSection() {
         {/* Agents Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {AGENTS.map((agent, index) => (
-            <div
+            <button
               key={agent.name}
+              onClick={() => onAgentClick?.(agent.name)}
               className={cn(
                 'glass rounded-2xl p-6 hover:border-primary/30 transition-all duration-300',
                 'hover:transform hover:-translate-y-1',
-                'animate-fade-up'
+                'animate-fade-up text-left w-full'
               )}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
@@ -119,7 +124,7 @@ export function AgentsSection() {
               <p className="text-sm text-muted-foreground mt-3">
                 {agent.description}
               </p>
-            </div>
+            </button>
           ))}
         </div>
 

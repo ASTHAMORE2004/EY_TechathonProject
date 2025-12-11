@@ -6,9 +6,14 @@ import { useChat } from '@/hooks/useChat';
 import { cn } from '@/lib/utils';
 import { FileDown } from 'lucide-react';
 
-export function ChatContainer() {
+interface ChatContainerProps {
+  verificationResult?: any;
+  onOpenKYC?: () => void;
+  onOpenInvestment?: () => void;
+}
+
+export function ChatContainer({ verificationResult, onOpenKYC, onOpenInvestment }: ChatContainerProps) {
   const { messages, isLoading, sendMessage, resetChat, conversationContext, sanctionLetterUrl } = useChat();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });

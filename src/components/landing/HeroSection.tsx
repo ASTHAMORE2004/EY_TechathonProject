@@ -13,9 +13,10 @@ import { cn } from '@/lib/utils';
 
 interface HeroSectionProps {
   onStartChat: () => void;
+  onFeatureClick?: (feature: string) => void;
 }
 
-export function HeroSection({ onStartChat }: HeroSectionProps) {
+export function HeroSection({ onStartChat, onFeatureClick }: HeroSectionProps) {
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
       {/* Background Effects */}
@@ -80,14 +81,15 @@ export function HeroSection({ onStartChat }: HeroSectionProps) {
             { icon: FileCheck, title: 'Instant Sanction', desc: 'Digital approval letter' },
             { icon: TrendingUp, title: 'Smart Savings', desc: 'Invest while you repay' },
           ].map((feature, i) => (
-            <div 
+            <button 
               key={feature.title}
-              className="glass rounded-2xl p-6 hover:border-primary/30 transition-colors"
+              onClick={() => onFeatureClick?.(feature.title)}
+              className="glass rounded-2xl p-6 hover:border-primary/30 transition-colors text-left"
             >
               <feature.icon size={28} className="text-primary mb-3" />
               <h3 className="font-semibold text-foreground mb-1">{feature.title}</h3>
               <p className="text-sm text-muted-foreground">{feature.desc}</p>
-            </div>
+            </button>
           ))}
         </div>
 
