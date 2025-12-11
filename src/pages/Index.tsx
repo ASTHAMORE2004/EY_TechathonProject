@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { AgentsSection } from '@/components/landing/AgentsSection';
+import { KYCSection } from '@/components/kyc/KYCSection';
 import { InvestmentSection } from '@/components/landing/InvestmentSection';
 import { FinancialLiteracySection } from '@/components/investment/FinancialLiteracySection';
 import { LoanComparisonSection } from '@/components/loan/LoanComparisonSection';
@@ -106,6 +107,10 @@ const Index = () => {
         onStartChat={() => setIsChatOpen(true)} 
         onFeatureClick={handleFeatureClick}
       />
+      
+      {/* KYC Verification Section - Prominent document upload */}
+      <KYCSection onStartKYC={() => setIsKYCOpen(true)} />
+      
       <AgentsSection 
         onAgentClick={(agent) => {
           if (agent === 'Verification Agent') {
@@ -117,7 +122,7 @@ const Index = () => {
           }
         }}
       />
-      <InvestmentSection 
+      <InvestmentSection
         onLearnMore={() => setIsInvestmentOpen(true)}
       />
       <LoanComparisonSection />

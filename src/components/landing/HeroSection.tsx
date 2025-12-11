@@ -93,22 +93,36 @@ export function HeroSection({ onStartChat, onFeatureClick }: HeroSectionProps) {
           that negotiates loans, verifies eligibility, and helps you save while you borrow.
         </p>
 
-        {/* CTA Button */}
-        <button
-          onClick={onStartChat}
-          className={cn(
-            'group inline-flex items-center gap-3 px-8 py-4 rounded-2xl',
-            'bg-gradient-primary text-primary-foreground font-semibold text-lg',
-            'hover:opacity-90 transition-all duration-300',
-            'glow-primary animate-fade-up',
-            'transform hover:scale-105'
-          )}
-          style={{ animationDelay: '0.3s' }}
-        >
-          <Bot size={24} />
-          Start Your Loan Journey
-          <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-        </button>
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-4 animate-fade-up" style={{ animationDelay: '0.3s' }}>
+          {/* Primary CTA - KYC Verification */}
+          <button
+            onClick={() => onFeatureClick?.('KYC Verified')}
+            className={cn(
+              'group inline-flex items-center gap-3 px-8 py-4 rounded-2xl',
+              'bg-gradient-primary text-primary-foreground font-semibold text-lg',
+              'hover:opacity-90 transition-all duration-300',
+              'glow-primary transform hover:scale-105'
+            )}
+          >
+            <ShieldCheck size={24} />
+            Upload Documents & Check Eligibility
+            <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+          </button>
+
+          {/* Secondary CTA - Chat */}
+          <button
+            onClick={onStartChat}
+            className={cn(
+              'group inline-flex items-center gap-3 px-6 py-4 rounded-2xl',
+              'bg-secondary border border-primary/20 text-foreground font-medium',
+              'hover:bg-secondary/80 transition-all duration-300'
+            )}
+          >
+            <Bot size={20} />
+            Chat with AI Assistant
+          </button>
+        </div>
 
         {/* Features Grid */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-16 animate-fade-up" style={{ animationDelay: '0.4s' }}>
