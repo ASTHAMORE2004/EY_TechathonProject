@@ -14,6 +14,7 @@ interface ChatContainerProps {
 
 export function ChatContainer({ verificationResult, onOpenKYC, onOpenInvestment }: ChatContainerProps) {
   const { messages, isLoading, sendMessage, resetChat, conversationContext, sanctionLetterUrl } = useChat();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
