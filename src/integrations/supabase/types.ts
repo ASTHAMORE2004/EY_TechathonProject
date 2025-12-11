@@ -99,43 +99,55 @@ export type Database = {
       }
       customers: {
         Row: {
+          aadhaar_document_url: string | null
           aadhaar_number: string | null
           created_at: string | null
           credit_score: number | null
+          credit_score_1000: number | null
           email: string | null
           employment_type: string | null
           full_name: string
           id: string
+          income_document_url: string | null
           kyc_verified: boolean | null
           monthly_income: number | null
+          pan_document_url: string | null
           pan_number: string | null
           phone: string | null
           updated_at: string | null
         }
         Insert: {
+          aadhaar_document_url?: string | null
           aadhaar_number?: string | null
           created_at?: string | null
           credit_score?: number | null
+          credit_score_1000?: number | null
           email?: string | null
           employment_type?: string | null
           full_name: string
           id?: string
+          income_document_url?: string | null
           kyc_verified?: boolean | null
           monthly_income?: number | null
+          pan_document_url?: string | null
           pan_number?: string | null
           phone?: string | null
           updated_at?: string | null
         }
         Update: {
+          aadhaar_document_url?: string | null
           aadhaar_number?: string | null
           created_at?: string | null
           credit_score?: number | null
+          credit_score_1000?: number | null
           email?: string | null
           employment_type?: string | null
           full_name?: string
           id?: string
+          income_document_url?: string | null
           kyc_verified?: boolean | null
           monthly_income?: number | null
+          pan_document_url?: string | null
           pan_number?: string | null
           phone?: string | null
           updated_at?: string | null

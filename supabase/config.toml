@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.generate-sanction-letter]
 verify_jwt = false
+
+[functions.analyze-documents]
+verify_jwt = false
