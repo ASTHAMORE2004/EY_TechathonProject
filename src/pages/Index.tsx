@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { AgentsSection } from '@/components/landing/AgentsSection';
 import { InvestmentSection } from '@/components/landing/InvestmentSection';
+import { FinancialLiteracySection } from '@/components/investment/FinancialLiteracySection';
+import { LoanComparisonSection } from '@/components/loan/LoanComparisonSection';
 import { Footer } from '@/components/landing/Footer';
 import { ChatContainer } from '@/components/chat/ChatContainer';
 import { KYCVerificationModal } from '@/components/kyc/KYCVerificationModal';
@@ -76,6 +78,8 @@ const Index = () => {
       <InvestmentSection 
         onLearnMore={() => setIsInvestmentOpen(true)}
       />
+      <LoanComparisonSection />
+      <FinancialLiteracySection />
       <Footer />
 
       {/* KYC Verification Modal */}
