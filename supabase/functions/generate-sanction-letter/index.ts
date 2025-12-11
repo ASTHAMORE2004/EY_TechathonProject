@@ -145,12 +145,12 @@ async function generatePDF(data: SanctionLetterData): Promise<Uint8Array> {
     color: primaryColor,
   });
   
-  // Loan details content
+  // Loan details content - Using "Rs." instead of rupee symbol for PDF compatibility
   const details = [
-    ["Loan Amount", `₹${data.loanAmount.toLocaleString('en-IN')}`],
+    ["Loan Amount", `Rs. ${data.loanAmount.toLocaleString('en-IN')}`],
     ["Interest Rate", `${data.interestRate}% per annum`],
     ["Loan Tenure", `${data.tenureMonths} months`],
-    ["Monthly EMI", `₹${data.emiAmount.toLocaleString('en-IN')}`],
+    ["Monthly EMI", `Rs. ${data.emiAmount.toLocaleString('en-IN')}`],
     ["Loan Purpose", data.purpose || "Personal Use"],
     ["Credit Score", `${data.creditScore} (${data.creditScore >= 750 ? 'Excellent' : data.creditScore >= 700 ? 'Good' : 'Fair'})`],
   ];
@@ -214,7 +214,7 @@ async function generatePDF(data: SanctionLetterData): Promise<Uint8Array> {
     borderWidth: 1,
   });
   
-  page.drawText("💡 Smart Savings Tip:", {
+  page.drawText("Smart Savings Tip:", {
     x: 55,
     y: termY - 25,
     size: 10,
@@ -222,7 +222,7 @@ async function generatePDF(data: SanctionLetterData): Promise<Uint8Array> {
     color: rgb(0.6, 0.4, 0),
   });
   
-  page.drawText("Round up your EMI to the nearest ₹100 and invest the difference in mutual funds for long-term wealth creation!", {
+  page.drawText("Round up your EMI to the nearest Rs. 100 and invest the difference in mutual funds for long-term wealth creation!", {
     x: 55,
     y: termY - 45,
     size: 9,
