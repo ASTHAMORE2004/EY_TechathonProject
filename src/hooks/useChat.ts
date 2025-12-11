@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import type { ConversationContext } from '@/types/loan';
+import { toast } from 'sonner';
 
 interface Message {
   id: string;
@@ -10,11 +11,56 @@ interface Message {
 }
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/loan-chat`;
+const SANCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-sanction-letter`;
 
 export function useChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [conversationContext, setConversationContext] = useState<ConversationContext>({});
+  const [sanctionLetterUrl, setSanctionLetterUrl] = useState<string | null>(null);
+
+  const generateSanctionLetter = useCallback(async (context: ConversationContext) => {
+    try {
+      console.log("Generating sanction letter with context:", context);
+      
+      const applicationId = crypto.randomUUID();
+      
+      const response = await fetch(SANCTION_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        },
+        body: JSON.stringify({
+          customerName: context.customerName || 'Valued Customer',
+          loanAmount: context.loanAmount || 500000,
+          interestRate: context.interestRate || 12.5,
+          tenureMonths: context.tenure || 36,
+          emiAmount: context.emi || Math.round((context.loanAmount || 500000) * 0.035),
+          purpose: context.purpose || 'Personal Loan',
+          creditScore: context.creditScore || 750,
+          applicationId,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to generate sanction letter');
+      }
+
+      const result = await response.json();
+      console.log("Sanction letter generated:", result);
+      
+      setSanctionLetterUrl(result.url);
+      toast.success("🎉 Sanction letter generated! Click to download.");
+      
+      return result.url;
+    } catch (error) {
+      console.error("Error generating sanction letter:", error);
+      toast.error("Failed to generate sanction letter");
+      return null;
+    }
+  }, []);
 
   const sendMessage = useCallback(async (content: string) => {
     const userMessage: Message = {
@@ -124,7 +170,20 @@ export function useChat() {
       }
 
       // Extract context from assistant response
-      extractContext(assistantContent);
+      const newContext = extractContext(assistantContent, conversationContext);
+      setConversationContext(newContext);
+
+      // Check if loan was sanctioned/approved - trigger PDF generation
+      const sanctionKeywords = ['sanctioned', 'approved', 'congratulations', 'sanction letter', 'loan is approved'];
+      const isSanctioned = sanctionKeywords.some(keyword => 
+        assistantContent.toLowerCase().includes(keyword)
+      );
+      
+      if (isSanctioned && newContext.loanAmount && !sanctionLetterUrl) {
+        setTimeout(() => {
+          generateSanctionLetter(newContext);
+        }, 1500);
+      }
 
     } catch (error) {
       console.error('Chat error:', error);
@@ -137,32 +196,57 @@ export function useChat() {
     } finally {
       setIsLoading(false);
     }
-  }, [messages, conversationContext]);
+  }, [messages, conversationContext, generateSanctionLetter, sanctionLetterUrl]);
 
-  const extractContext = (content: string) => {
-    // Simple regex-based context extraction
+  const extractContext = (content: string, prevContext: ConversationContext): ConversationContext => {
+    const newContext = { ...prevContext };
+    
+    // Extract loan amount
     const amountMatch = content.match(/₹([\d,]+)/);
     if (amountMatch) {
       const amount = parseInt(amountMatch[1].replace(/,/g, ''));
       if (amount > 10000) {
-        setConversationContext(prev => ({ ...prev, loanAmount: amount }));
+        newContext.loanAmount = amount;
       }
     }
 
+    // Extract credit score
     const creditMatch = content.match(/credit score.*?(\d{3})/i);
     if (creditMatch) {
-      setConversationContext(prev => ({ ...prev, creditScore: parseInt(creditMatch[1]) }));
+      newContext.creditScore = parseInt(creditMatch[1]);
     }
 
+    // Extract EMI
     const emiMatch = content.match(/EMI.*?₹([\d,]+)/i);
     if (emiMatch) {
-      setConversationContext(prev => ({ ...prev, emi: parseInt(emiMatch[1].replace(/,/g, '')) }));
+      newContext.emi = parseInt(emiMatch[1].replace(/,/g, ''));
     }
+
+    // Extract interest rate
+    const rateMatch = content.match(/(\d+\.?\d*)\s*%\s*(p\.?a\.?|per annum|annual)/i);
+    if (rateMatch) {
+      newContext.interestRate = parseFloat(rateMatch[1]);
+    }
+
+    // Extract tenure
+    const tenureMatch = content.match(/(\d+)\s*(month|months)/i);
+    if (tenureMatch) {
+      newContext.tenure = parseInt(tenureMatch[1]);
+    }
+
+    // Extract customer name
+    const nameMatch = content.match(/Dear\s+(\w+)/i) || content.match(/Mr\.?\s+(\w+)/i) || content.match(/Ms\.?\s+(\w+)/i);
+    if (nameMatch && !newContext.customerName) {
+      newContext.customerName = nameMatch[1];
+    }
+
+    return newContext;
   };
 
   const resetChat = useCallback(() => {
     setMessages([]);
     setConversationContext({});
+    setSanctionLetterUrl(null);
   }, []);
 
   return {
@@ -172,5 +256,7 @@ export function useChat() {
     resetChat,
     conversationContext,
     setConversationContext,
+    sanctionLetterUrl,
+    generateSanctionLetter,
   };
 }
