@@ -2,3 +2,6 @@ project_id = "mmgiawdabanndymppldo"
 
 [functions.loan-chat]
 verify_jwt = false
+
+[functions.generate-sanction-letter]
+verify_jwt = false
