@@ -115,6 +115,7 @@ export type Database = {
           pan_number: string | null
           phone: string | null
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           aadhaar_document_url?: string | null
@@ -133,6 +134,7 @@ export type Database = {
           pan_number?: string | null
           phone?: string | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           aadhaar_document_url?: string | null
@@ -151,6 +153,7 @@ export type Database = {
           pan_number?: string | null
           phone?: string | null
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -218,6 +221,7 @@ export type Database = {
           status: Database["public"]["Enums"]["loan_status"] | null
           tenure_months: number
           updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
@@ -231,6 +235,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["loan_status"] | null
           tenure_months: number
           updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
@@ -244,6 +249,7 @@ export type Database = {
           status?: Database["public"]["Enums"]["loan_status"] | null
           tenure_months?: number
           updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -254,6 +260,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
