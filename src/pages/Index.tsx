@@ -8,7 +8,10 @@ import { Footer } from '@/components/landing/Footer';
 import { ChatContainer } from '@/components/chat/ChatContainer';
 import { KYCVerificationModal } from '@/components/kyc/KYCVerificationModal';
 import { InvestmentModal } from '@/components/investment/InvestmentModal';
-import { X, MessageCircle } from 'lucide-react';
+import { PrivacyAgreementModal } from '@/components/onboarding/PrivacyAgreementModal';
+import { GuidedTour } from '@/components/onboarding/GuidedTour';
+import { useOnboarding } from '@/hooks/useOnboarding';
+import { X, MessageCircle, HelpCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
@@ -39,11 +42,22 @@ const Index = () => {
   const [isKYCOpen, setIsKYCOpen] = useState(false);
   const [isInvestmentOpen, setIsInvestmentOpen] = useState(false);
   const [verificationResult, setVerificationResult] = useState<DocumentAnalysis | null>(null);
+  const [showManualTour, setShowManualTour] = useState(false);
+
+  // Onboarding state
+  const {
+    showPrivacyModal,
+    showTour,
+    isLoading,
+    handlePrivacyAgree,
+    handleTourComplete,
+    handleTourSkip,
+    resetOnboarding,
+  } = useOnboarding();
 
   const handleKYCComplete = (analysis: DocumentAnalysis) => {
     setVerificationResult(analysis);
     toast.success(`Credit Score: ${analysis.creditScore1000}/1000 - ${analysis.riskLevel === 'low' ? 'Excellent!' : 'Approved!'}`);
-    // Open chat to continue the journey
     setIsChatOpen(true);
   };
 
@@ -57,8 +71,36 @@ const Index = () => {
     }
   };
 
+  // Show loading state briefly
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-pulse text-primary">Loading...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Privacy Agreement Modal - Must agree before using */}
+      <PrivacyAgreementModal 
+        open={showPrivacyModal} 
+        onAgree={handlePrivacyAgree} 
+      />
+
+      {/* Guided Tour - Shows after privacy agreement */}
+      <GuidedTour
+        open={showTour || showManualTour}
+        onComplete={() => {
+          handleTourComplete();
+          setShowManualTour(false);
+        }}
+        onSkip={() => {
+          handleTourSkip();
+          setShowManualTour(false);
+        }}
+      />
+
       {/* Landing Page Content */}
       <HeroSection 
         onStartChat={() => setIsChatOpen(true)} 
@@ -99,6 +141,22 @@ const Index = () => {
         loanAmount={verificationResult?.eligibleAmount || 500000}
         tenureMonths={36}
       />
+
+      {/* Help Button - Restart Tour */}
+      <button
+        onClick={() => setShowManualTour(true)}
+        className={cn(
+          'fixed bottom-6 left-6 w-12 h-12 rounded-full',
+          'bg-secondary border border-border',
+          'flex items-center justify-center',
+          'text-muted-foreground hover:text-foreground hover:bg-secondary/80',
+          'transition-all duration-200 z-40',
+          'shadow-lg'
+        )}
+        title="View Tour Guide"
+      >
+        <HelpCircle size={22} />
+      </button>
 
       {/* Chat Fab Button */}
       {!isChatOpen && (
