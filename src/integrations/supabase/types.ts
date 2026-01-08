@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      application_status_history: {
+        Row: {
+          created_at: string
+          id: string
+          loan_application_id: string | null
+          notes: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          loan_application_id?: string | null
+          notes?: string | null
+          status: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          loan_application_id?: string | null
+          notes?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "application_status_history_loan_application_id_fkey"
+            columns: ["loan_application_id"]
+            isOneToOne: false
+            referencedRelation: "loan_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       chat_messages: {
         Row: {
           agent_type: string | null
@@ -48,6 +80,59 @@ export type Database = {
             columns: ["conversation_id"]
             isOneToOne: false
             referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      co_applicants: {
+        Row: {
+          aadhaar_number: string | null
+          created_at: string
+          credit_score: number | null
+          email: string | null
+          employment_type: string | null
+          full_name: string
+          id: string
+          loan_application_id: string | null
+          monthly_income: number | null
+          pan_number: string | null
+          phone: string | null
+          relationship: string | null
+        }
+        Insert: {
+          aadhaar_number?: string | null
+          created_at?: string
+          credit_score?: number | null
+          email?: string | null
+          employment_type?: string | null
+          full_name: string
+          id?: string
+          loan_application_id?: string | null
+          monthly_income?: number | null
+          pan_number?: string | null
+          phone?: string | null
+          relationship?: string | null
+        }
+        Update: {
+          aadhaar_number?: string | null
+          created_at?: string
+          credit_score?: number | null
+          email?: string | null
+          employment_type?: string | null
+          full_name?: string
+          id?: string
+          loan_application_id?: string | null
+          monthly_income?: number | null
+          pan_number?: string | null
+          phone?: string | null
+          relationship?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "co_applicants_loan_application_id_fkey"
+            columns: ["loan_application_id"]
+            isOneToOne: false
+            referencedRelation: "loan_applications"
             referencedColumns: ["id"]
           },
         ]
@@ -156,6 +241,83 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      expense_entries: {
+        Row: {
+          amount: number
+          category: string
+          created_at: string
+          date: string
+          description: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          amount: number
+          category: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number
+          category?: string
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      investment_portfolio: {
+        Row: {
+          amount: number
+          created_at: string
+          customer_id: string | null
+          expected_returns: number | null
+          fund_name: string
+          fund_type: string
+          id: string
+          nav: number | null
+          risk_level: string | null
+          units: number | null
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          customer_id?: string | null
+          expected_returns?: number | null
+          fund_name: string
+          fund_type: string
+          id?: string
+          nav?: number | null
+          risk_level?: string | null
+          units?: number | null
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          customer_id?: string | null
+          expected_returns?: number | null
+          fund_name?: string
+          fund_type?: string
+          id?: string
+          nav?: number | null
+          risk_level?: string | null
+          units?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "investment_portfolio_customer_id_fkey"
+            columns: ["customer_id"]
+            isOneToOne: false
+            referencedRelation: "customers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       investment_recommendations: {
         Row: {
